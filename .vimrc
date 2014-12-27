@@ -82,9 +82,8 @@ let g:neocomplcache_min_syntax_length = 3
 " ディクショナリ定義
 let g:neocomplcache_dictionary_filetype_lists = {
             \ 'default' : '',
-            \ 'php' : $HOME . '/.vim/dict/php.dict',
-            \ 'ctp' : $HOME . '/.vim/dict/php.dict',
-            \ 'perl' : $HOME . '/.vim/dict/perl.dict'
+            \ 'perl' : $HOME . '/.vim/dict/perl.dict',
+            \ 'ruby' : $HOME . '/.vim/dict/ruby.dict'
             \ }
 
 if !exists('g:neocomplcache_keyword_patterns')
