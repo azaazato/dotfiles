@@ -1,24 +1,16 @@
-if &t_Co > 1
-    syntax enable
-endif
-
-" エンコード指定
-set encoding=utf-8
-set fileencodings=iso-2022-jp,euc-jp,sjis,utf-8
-
 " ファイル形式の検出を無効にする
 filetype off
+" エンコード指定
+set encoding=utf-8
+set fileencodings=utf-8,euc-jp,iso-2022-jp,sjis,cp932
+"ハイライト検索
+set hlsearch
 
-"入力モード時、ステータスラインのカラーを変更
-augroup InsertHook
-    autocmd!
-    autocmd InsertEnter * highlight StatusLine guifg=#ccdc90 guibg=#2E4340
-    autocmd InsertLeave * highlight StatusLine guifg=#2E4340 guibg=#ccdc90
-augroup END
+" vi との互換性OFF
+set nocompatible
 
-"全角スペースを視覚化
-highlight ZenkakuSpace cterm=underline ctermfg=lightblue guibg=#666666
-au BufNewFile,BufRead * match ZenkakuSpace /　/
+"noswap
+set noswapfile
 
 "タブ幅を設定"
 set tabstop=4
@@ -28,49 +20,26 @@ set expandtab
 
 set cindent
 
-"行番号を表示
-"set number
+"改行時のコメントアウトなし
+autocmd FileType * setlocal formatoptions-=ro
 
-set laststatus=2 " 常にステータスラインを表示
-"カーソルが何行目の何列目に置かれているかを表示する
-set ruler
+"カラースキーマを設定
+colorscheme jellybeans
 
-" Pythonの設定
+" カレント行ハイライトON
+set cursorline
+highlight CursolLine ctermbg=Black
+
+" Ruby
+autocmd FileType ruby setl autoindent
+autocmd FileType ruby setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
+
+" Python
 autocmd FileType python setl autoindent
 autocmd FileType python setl smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
 autocmd FileType python setl tabstop=4 expandtab shiftwidth=4 softtabstop=4
 
-" Execute python script C-P
-function! s:ExecPy()
-    exe "!" . &ft . " %"
-endfunction
-command! Exec call <SID>ExecPy()
-autocmd FileType python map <silent> <C-P> :call <SID>ExecPy()<CR>
-autocmd FileType python let g:pydiction_location = '~/.vim/pydiction/complete-dict'
-
 let g:neocomplcache_enable_at_startup = 1
-
-" Comment or uncomment lines from mark a to mark b.
-function! CommentMark(docomment, a, b)
-    if !exists('b:comment')
-        let b:comment = CommentStr() . ' '
-    endif
-    if a:docomment
-        exe "normal! '" . a:a . "_\<C-V>'" . a:b . 'I' . b:comment
-    else
-        exe "'".a:a.",'".a:b . 's/^\(\s*\)' . escape(b:comment,'/') . '/\1/e'
-    endif
-endfunction
-
-" Comment lines in marks set by g@ operator.
-function! DoCommentOp(type)
-    call CommentMark(1, '[', ']')
-endfunction
-
-" Uncomment lines in marks set by g@ operator.
-function! UnCommentOp(type)
-    call CommentMark(0, '[', ']')
-endfunction
 
 " Return string used to comment line for current filetype.
 function! CommentStr()
@@ -90,18 +59,6 @@ nnoremap <Leader>c <Esc>:set opfunc=DoCommentOp<CR>g@
 nnoremap <Leader>C <Esc>:set opfunc=UnCommentOp<CR>g@
 vnoremap <Leader>c <Esc>:call CommentMark(1,'<','>')<CR>
 vnoremap <Leader>C <Esc>:call CommentMark(0,'<','>')<CR>
-
-let g:proj_flags = "imstc"
-nmap <silent> <Leader>P <Plug>ToggleProject
-nmap <silent> <Leader>p :Project<CR>
-
-
-"PHP"
-set makeprg=php\ -l\ %
-set errorformat=%m\ in\ %f\ on\ line\ %l
-
-" vi との互換性OFF
-set nocompatible
 
 " 補完ウィンドウの設定
 set completeopt=menuone
@@ -187,24 +144,21 @@ au FileType unite inoremap <silent> <buffer> <expr> <C-l> unite#do_action('vspli
 au FileType unite nnoremap <silent> <buffer> <ESC><ESC> q
 au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>q
 
+set laststatus=2 " 常にステータスラインを表示
+set statusline=%f%m%=%l,%c\ %{'['.(&fenc!=''?&fenc:&enc).']\ ['.&fileformat.']'}%{fugitive#statusline()}
+" ブランチ名をステータス行に表示
+" set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
+
+"set tags=~/.tags
+
 "<C-e>でNERDTreeをオンオフ。いつでもどこでも。
-" map <silent> <C-e>   :NERDTreeToggle<CR>
+"   map <silent> <C-e>   :NERDTreeToggle<CR>
 " lmap <silent> <C-e>  :NERDTreeToggle<CR>
 nmap <silent> <C-e>      :NERDTreeToggle<CR>
 vmap <silent> <C-e> <Esc>:NERDTreeToggle<CR>
 omap <silent> <C-e>      :NERDTreeToggle<CR>
 imap <silent> <C-e> <Esc>:NERDTreeToggle<CR>
 cmap <silent> <C-e> <C-u>:NERDTreeToggle<CR>
-
-"引数なしでvimを開いたらNERDTreeを起動、
-"引数ありならNERDTreeは起動しない、引数で渡されたファイルを開く。
-"How can I open a NERDTree automatically when vim starts up if no files were specified?
-"autocmd vimenter * if !argc() | NERDTree | endif
-
-"カラースキーマを設定
-colorscheme jellybeans
-
-set nocompatible               " be iMproved
 
 if has('vim_starting')
     set runtimepath+=~/.vim/bundle/neobundle.vim
@@ -220,7 +174,6 @@ NeoBundle 'mattn/zencoding-vim'
 NeoBundle 'teramako/jscomplete-vim'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'int3/vim-extradite'
-NeoBundle 'klen/python-mode'
 NeoBundle 'thinca/vim-quickrun'
 NeoBundle 'Shougo/vimfiler'
 NeoBundle 'tpope/vim-rails'
@@ -228,7 +181,6 @@ NeoBundle 'hotchpotch/perldoc-vim'
 NeoBundle 'vim-scripts/SingleCompile'
 NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'tomtom/tcomment_vim'
-NeoBundle 'vim-scripts/sudo.vim'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'Lokaltog/vim-easymotion'
 NeoBundle 'fuenor/vim-statusline'
@@ -236,51 +188,37 @@ NeoBundle 'y-uuki/unite-perl-module.vim'
 NeoBundle 'y-uuki/perl-local-lib-path.vim'
 NeoBundle 'mattn/excitetranslate-vim'
 NeoBundle 'kana/vim-smartchr'
-NeoBundle 'glidenote/memolist.vim'
-NeoBundle 'tyru/open-browser.vim'
 NeoBundle 'qtmplsel.vim'
 NeoBundle 'tpope/vim-abolish'
 NeoBundle 'YankRing.vim'
-NeoBundle 'vim-scripts/Trinity'
 NeoBundle 'ctags.vim'
 NeoBundle 'wesleyche/SrcExpl'
+NeoBundle 'ack.vim'
+NeoBundle 'thinca/vim-scouter'
+NeoBundle 'Align'
+NeoBundle 'Simple-Javascript-Indenter'
+NeoBundle 'syntastic'
+NeoBundle 'vim-coffee-script'
 NeoBundle 'taglist.vim'
-"NeoBundle 'perl-support.vim'
 NeoBundle 'csv.vim'
-"NeoBundle 'vim-scripts/errormarker.vim'
-"NeoBundle 'https://bitbucket.org/kovisoft/slimv'
 
-" solarized カラースキーム
+" カラースキーム
 NeoBundle 'altercation/vim-colors-solarized'
-" jellybeans カラースキーム
 NeoBundle 'nanotech/jellybeans.vim'
-" mustang カラースキーム
 NeoBundle 'croaker/mustang-vim'
-" wombat カラースキーム
 NeoBundle 'jeffreyiacono/vim-colors-wombat'
-" jellybeans カラースキーム
 NeoBundle 'nanotech/jellybeans.vim'
-" lucius カラースキーム
 NeoBundle 'vim-scripts/Lucius'
-" zenburn カラースキーム
 NeoBundle 'vim-scripts/Zenburn'
-" mrkn256 カラースキーム
 NeoBundle 'mrkn/mrkn256.vim'
-" railscasts カラースキーム
 NeoBundle 'jpo/vim-railscasts-theme'
-" pyte カラースキーム
 NeoBundle 'therubymug/vim-pyte'
-" molokai カラースキーム
 NeoBundle 'tomasr/molokai'
-" Uniteでカラースキームを管理
 NeoBundle 'ujihisa/unite-colorscheme'
 
 filetype plugin indent on
 filetype indent on
 syntax on
-
-"vi上から、:NeoBundleInstallで.vimrcのNeoBundleで指定されているリポジトリのプラグインをインストールできる。
-"プラグインを削除したい場合は、vimrc上からNeoBundleの記述を消して:NeoBundleCleanでできる。
 
 set backspace=indent,eol,start
 
@@ -302,17 +240,8 @@ autocmd FileType ruby :map <C-n> <ESC>:!ruby -cW %<CR>
 autocmd FileType ruby :map <C-e> <ESC>:!ruby %<CR>
 
 imap <C-c> <C-[>
-imap <C-k> <C-m>
-
-imap {} {}<LEFT>
-imap [] []<LEFT>
-imap () ()<LEFT>
-imap "" ""<LEFT>
-imap '' ''<LEFT>
-imap <> <><LEFT>
 
 "Lokaltog/vim-easymotion
-" http://blog.remora.cx/2012/08/vim-easymotion.html
 " ホームポジションに近いキーを使う
 let g:EasyMotion_keys='hjklasdfgyuiopqwertnmzxcvbHJKLASDFGYUIOPQWERTNMZXCVB'
 " 「;」 + 何かにマッピング
@@ -325,27 +254,13 @@ let g:EasyMotion_grouping=1
 set lcs=tab:>.,eol:$,trail:_,extends:\
 map ,ptv :'<,'>! perltidy
 
-"ブラウザで開く
-nmap gW <Plug>(openbrowser - open)
-
 "テンプレートを開く
 let g:qts_templatedir='~/.vim/template'
 
-"CTRL - hjklでウィンドウ移動
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-l> <C-w>l
-nnoremap <C-h> <C-w>h
-
-"改行時のコメントアウトなし
-autocmd FileType * setlocal formatoptions-=ro
-
 " 保存時に行末の空白を除去する
-" 保存時にtabを4スペースに変換する
 function! s:remove_dust()
     let cursor = getpos(".")
     %s/\s\+$//ge
-    %s/\t/    /ge
     call setpos(".", cursor)
     unlet cursor
 endfunction
@@ -356,32 +271,19 @@ autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "norm
 
 ",yでヤンク履歴
 " YankRing.vim
+nmap gW <Plug>(openbrowser - open)
 " http:/nanasi.jp/articles/vim/yankring_vim.html
 " https:/github.com/yuroyoro/dotfiles/blob/master/.vimrc.plugins_setting
 nmap ,y :YRShow<CR>
 
-
-" クリップボード共有
-" http:/vim-users.jp/2010/02/hack126/
+"他のアプリでコピーした文字をVimで貼付けたい。またはその逆も
+set clipboard=unnamed,autoselect
 set clipboard+=unnamedplus,unnamed
-
 
 "smartchr
 inoremap <expr> = smartchr#loop('=', ' = ', ' == ')
 inoremap <expr> , smartchr#loop(',', ', ', ' => ')
 inoremap <buffer> <expr> <S-=> smartchr#loop(' + ', '+')
-"inoremap <buffer> <expr> - smartchr#loop(' - ', '-')
-
-"noswap
-set noswapfile
-
-"他のアプリでコピーした文字をVimで貼付けたい。またはその逆も
-set clipboard=unnamed,autoselect
-
-"memolist.vim
-map <Leader>mn :MemoNew<CR>
-map <Leader>ml :MemoList<CR>
-map <Leader>mg :MemoGrep<CR>
 
 "作業履歴の保存
 if has('persistent_undo')
@@ -389,17 +291,18 @@ if has('persistent_undo')
     set undofile
 endif
 
-" ファイル形式検出、プラグイン、インデントを ON
-filetype plugin indent on
+" Ack
+nmap <Space>a :let a=expand("<cword>")<CR>:Ack <C-R>=expand(a)<CR>
+nmap <Space>A :Ack
+nnoremap <Space>n :cnext<CR>
+nnoremap <Space>p :cprevious<CR>
 
-" Open and close all the three plugins on the same time
-nmap <F8>   :TrinityToggleAll<CR>
-
-" Open and close the srcexpl.vim separately
-nmap <F9>   :TrinityToggleSourceExplorer<CR>
-
-" Open and close the taglist.vim separately
-nmap <F10>  :TrinityToggleTagList<CR>
-
-" Open and close the NERD_tree.vim separately
-nmap <F11>  :TrinityToggleNERDTree<CR>
+" for Fugitive {{{
+nnoremap <Space>gd :<C-u>Gdiff<Enter>
+nnoremap <Space>gs :<C-u>Gstatus<Enter>
+nnoremap <Space>gl :<C-u>Glog<Enter>
+nnoremap <Space>ga :<C-u>Gwrite<Enter>
+nnoremap <Space>gc :<C-u>Gcommit<Enter>
+nnoremap <Space>gC :<C-u>Git commit --amend<Enter>
+nnoremap <Space>gb :<C-u>Gblame<Enter>
+" }}}
