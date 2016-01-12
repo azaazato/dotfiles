@@ -28,7 +28,7 @@ setopt rm_star_silent
 setopt sh_word_split
 setopt sun_keyboard_hack
 setopt noclobber
-# watch=(all) 
+# watch=(all)
 
 # correct prompt
 SPROMPT="correct '%R' to '%r' [nyae]? "
@@ -67,7 +67,7 @@ zstyle ':completion:*:default' menu select=1
 #export VFONTCAP=/usr/local/lib/vfont/vfontcap
 
 
-# C-w: delete until previous "/" 
+# C-w: delete until previous "/"
 export WORDCHARS='*?_.[];!#$%^{}<>'
 
 # PROMPT
@@ -83,7 +83,7 @@ export GNUTERM=x11
 HISTFILE=~/.zsh_history
 HISTSIZE=100000
 SAVEHIST=100000
-setopt share_history        # share command history data 
+setopt share_history        # share command history data
 
 #bindkey -v
 
@@ -91,14 +91,33 @@ autoload history-search-end
 zle -N history-beginning-search-backward-end history-search-end
 zle -N history-beginning-search-forward-end history-search-end
 bindkey "^P" history-beginning-search-backward-end
-bindkey "^N" history-beginning-search-forward-end 
+bindkey "^N" history-beginning-search-forward-end
 
 # alias ctags='/usr/local/Cellar/ctags/5.8/bin/ctags'
 
+export GOPATH=$HOME
+export PATH=$PATH:$GOPATH/bin
 
-#. /usr/local/etc/profile.d/z.sh
-_Z_CMD=j
-. /usr/local/Cellar/z/1.5/etc/profile.d/z.sh
-precmd() {
-	  _z --add "$(pwd -P)"
+setopt hist_ignore_all_dups
+
+function peco_select_history() {
+  local tac
+  if which tac > /dev/null; then
+    tac="tac"
+  else
+    tac="tail -r"
+  fi
+  BUFFER=$(fc -l -n 1 | eval $tac | peco --query "$LBUFFER")
+  CURSOR=$#BUFFER
+  zle clear-screen
 }
+zle -N peco_select_history
+bindkey '^r' peco_select_history
+
+alias -g B='`git branch | peco | sed -e "s/^\*[ ]*//g"`'
+
+p() { peco | while read LINE; do $@ $LINE; done }
+alias gp='ghq list -p | p cd'
+
+export PATH=$PATH:/usr/local/src/spark/bin
+export PATH=$PATH:/Users/suzukishota/bin

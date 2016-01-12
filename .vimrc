@@ -23,8 +23,6 @@ set cindent
 "改行時のコメントアウトなし
 autocmd FileType * setlocal formatoptions-=ro
 
-"カラースキーマを設定
-colorscheme jellybeans
 
 " カレント行ハイライトON
 set cursorline
@@ -161,59 +159,65 @@ cmap <silent> <C-e> <C-u>:NERDTreeToggle<CR>
 
 if has('vim_starting')
     set runtimepath+=~/.vim/bundle/neobundle.vim
-    call neobundle#rc(expand('~/.vim/bundle/'))
+    call neobundle#begin(expand('~/.vim/bundle'))
+    NeoBundle 'Shougo/neobundle.vim'
+    NeoBundle 'Shougo/vimproc'
+    NeoBundle 'Shougo/unite.vim'
+    NeoBundle 'Shougo/neocomplcache'
+    " NeoBundle 'Shougo/neosnippet'
+    " NeoBundle 'mattn/zencoding-vim'
+    NeoBundle 'Shougo/neomru.vim'
+    NeoBundle 'teramako/jscomplete-vim'
+    NeoBundle 'tpope/vim-fugitive'
+    NeoBundle 'int3/vim-extradite'
+    NeoBundle 'thinca/vim-quickrun'
+    NeoBundle 'Shougo/vimfiler'
+    NeoBundle 'tpope/vim-rails'
+    NeoBundle 'hotchpotch/perldoc-vim'
+    NeoBundle 'vim-scripts/SingleCompile'
+    NeoBundle 'scrooloose/nerdtree'
+    NeoBundle 'tomtom/tcomment_vim'
+    NeoBundle 'tpope/vim-surround'
+    NeoBundle 'Lokaltog/vim-easymotion'
+    NeoBundle 'fuenor/vim-statusline'
+    NeoBundle 'y-uuki/unite-perl-module.vim'
+    NeoBundle 'y-uuki/perl-local-lib-path.vim'
+    NeoBundle 'mattn/excitetranslate-vim'
+    NeoBundle 'kana/vim-smartchr'
+    NeoBundle 'qtmplsel.vim'
+    NeoBundle 'tpope/vim-abolish'
+    NeoBundle 'YankRing.vim'
+    NeoBundle 'ctags.vim'
+    NeoBundle 'wesleyche/SrcExpl'
+    NeoBundle 'ack.vim'
+    NeoBundle 'thinca/vim-scouter'
+    NeoBundle 'Align'
+    NeoBundle 'Simple-Javascript-Indenter'
+    NeoBundle 'syntastic'
+    NeoBundle 'vim-coffee-script'
+    NeoBundle 'taglist.vim'
+    NeoBundle 'csv.vim'
+    NeoBundle 'fatih/vim-go'
+    NeoBundle 'git://github.com/kmnk/vim-unite-giti.git'
+    NeoBundle 'ekalinin/Dockerfile.vim'
+
+    " カラースキーム
+    NeoBundle 'altercation/vim-colors-solarized'
+    NeoBundle 'croaker/mustang-vim'
+    NeoBundle 'jeffreyiacono/vim-colors-wombat'
+    NeoBundle 'nanotech/jellybeans.vim'
+    NeoBundle 'altercation/vim-colors-solarized'
+    NeoBundle 'vim-scripts/Lucius'
+    NeoBundle 'vim-scripts/Zenburn'
+    NeoBundle 'mrkn/mrkn256.vim'
+    NeoBundle 'jpo/vim-railscasts-theme'
+    NeoBundle 'therubymug/vim-pyte'
+    NeoBundle 'tomasr/molokai'
+    NeoBundle 'ujihisa/unite-colorscheme'
+
+    call neobundle#end()
 endif
 " originalrepos on github
-NeoBundle 'Shougo/neobundle.vim'
-NeoBundle 'Shougo/vimproc'
-NeoBundle 'Shougo/unite.vim'
-NeoBundle 'Shougo/neocomplcache'
-NeoBundle 'Shougo/neosnippet'
-NeoBundle 'mattn/zencoding-vim'
-NeoBundle 'teramako/jscomplete-vim'
-NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'int3/vim-extradite'
-NeoBundle 'thinca/vim-quickrun'
-NeoBundle 'Shougo/vimfiler'
-NeoBundle 'tpope/vim-rails'
-NeoBundle 'hotchpotch/perldoc-vim'
-NeoBundle 'vim-scripts/SingleCompile'
-NeoBundle 'scrooloose/nerdtree'
-NeoBundle 'tomtom/tcomment_vim'
-NeoBundle 'tpope/vim-surround'
-NeoBundle 'Lokaltog/vim-easymotion'
-NeoBundle 'fuenor/vim-statusline'
-NeoBundle 'y-uuki/unite-perl-module.vim'
-NeoBundle 'y-uuki/perl-local-lib-path.vim'
-NeoBundle 'mattn/excitetranslate-vim'
-NeoBundle 'kana/vim-smartchr'
-NeoBundle 'qtmplsel.vim'
-NeoBundle 'tpope/vim-abolish'
-NeoBundle 'YankRing.vim'
-NeoBundle 'ctags.vim'
-NeoBundle 'wesleyche/SrcExpl'
-NeoBundle 'ack.vim'
-NeoBundle 'thinca/vim-scouter'
-NeoBundle 'Align'
-NeoBundle 'Simple-Javascript-Indenter'
-NeoBundle 'syntastic'
-NeoBundle 'vim-coffee-script'
-NeoBundle 'taglist.vim'
-NeoBundle 'csv.vim'
-
-" カラースキーム
-NeoBundle 'altercation/vim-colors-solarized'
-NeoBundle 'nanotech/jellybeans.vim'
-NeoBundle 'croaker/mustang-vim'
-NeoBundle 'jeffreyiacono/vim-colors-wombat'
-NeoBundle 'nanotech/jellybeans.vim'
-NeoBundle 'vim-scripts/Lucius'
-NeoBundle 'vim-scripts/Zenburn'
-NeoBundle 'mrkn/mrkn256.vim'
-NeoBundle 'jpo/vim-railscasts-theme'
-NeoBundle 'therubymug/vim-pyte'
-NeoBundle 'tomasr/molokai'
-NeoBundle 'ujihisa/unite-colorscheme'
 
 filetype plugin indent on
 filetype indent on
@@ -305,3 +309,72 @@ nnoremap <Space>gc :<C-u>Gcommit<Enter>
 nnoremap <Space>gC :<C-u>Git commit --amend<Enter>
 nnoremap <Space>gb :<C-u>Gblame<Enter>
 " }}}
+
+" ----------------------------------------
+" Uniteの設定
+" Uniteは要素の絞り込み、要素へのアクションができるプラグインです
+" 例えば`:Unite file`ではファイルへ操作を行うことができます
+" 詳しい使い方については下記を参照してください
+" http://d.hatena.ne.jp/osyo-manga/20130307/1362621589
+let g:giti_git_command = executable('hub') ? 'hub' : 'git'
+nnoremap <silent>gm :Gcommit<CR>
+nnoremap <silent>gM :Gcommit --amend<CR>
+nnoremap <silent>gb :Gblame<CR>
+nnoremap <silent>gB :Gbrowse<CR>
+
+let g:fugitive_git_executable = executable('hub') ? 'hub' : 'git'
+nnoremap <silent>gs :Unite giti/status -horizontal<CR>
+nnoremap <silent>gl :Unite giti/log -horizontal<CR>
+nnoremap <silent>gs :Unite giti/status -horizontal<CR>
+nnoremap <silent>gh :Unite giti/branch_all<CR>
+
+" vim-unite-giti {{{
+" `:Unite giti/status`, `:Unite giti/branch`, ` :Unite giti/log`などを起動した
+" 後に、各コマンドに合わせた設定を反映します
+augroup UniteCommand
+  autocmd!
+  autocmd FileType unite call <SID>unite_settings()
+augroup END
+
+function! s:unite_settings() "{{{
+  for source in unite#get_current_unite().sources
+    let source_name = substitute(source.name, '[-/]', '_', 'g')
+    if !empty(source_name) && has_key(s:unite_hooks, source_name)
+      call s:unite_hooks[source_name]()
+    endif
+  endfor
+endfunction"}}}
+
+let s:unite_hooks = {}
+
+function! s:unite_hooks.giti_status() "{{{
+  nnoremap <silent><buffer><expr>gM unite#do_action('ammend')
+  nnoremap <silent><buffer><expr>gm unite#do_action('commit')
+  nnoremap <silent><buffer><expr>ga unite#do_action('stage')
+  nnoremap <silent><buffer><expr>gc unite#do_action('checkout')
+  nnoremap <silent><buffer><expr>gd unite#do_action('diff')
+  nnoremap <silent><buffer><expr>gu unite#do_action('unstage')
+endfunction"}}}
+
+function! s:unite_hooks.giti_branch() "{{{
+  nnoremap <silent><buffer><expr>d unite#do_action('delete')
+  nnoremap <silent><buffer><expr>D unite#do_action('delete_force')
+  nnoremap <silent><buffer><expr>rd unite#do_action('delete_remote')
+  nnoremap <silent><buffer><expr>rD unite#do_action('delete_remote_force')
+endfunction"}}}
+
+function! s:unite_hooks.giti_branch_all() "{{{
+  call self.giti_branch()
+endfunction"}}}
+"}}}
+
+"カラースキーマを設定
+set background=dark
+colorscheme solarized
+
+
+NeoBundleLazy 'fatih/vim-go', {
+            \ 'autoload' : { 'filetypes' : 'go'  }
+            \ }
+
+let g:go_fmt_command = "goimports"
