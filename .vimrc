@@ -23,6 +23,10 @@ set cindent
 "改行時のコメントアウトなし
 autocmd FileType * setlocal formatoptions-=ro
 
+let mapleader = ","
+
+" ,のデフォルトの機能は、\で使えるように退避
+noremap \  ,
 
 " カレント行ハイライトON
 set cursorline
@@ -36,6 +40,10 @@ autocmd FileType ruby setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
 autocmd FileType python setl autoindent
 autocmd FileType python setl smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
 autocmd FileType python setl tabstop=4 expandtab shiftwidth=4 softtabstop=4
+
+" ~/.pyenv/shimsを$PATHに追加
+" jedi-vim や vim-pyenc のロードよりも先に行う必要がある、はず。
+let $PATH = "~/.pyenv/shims:".$PATH
 
 let g:neocomplcache_enable_at_startup = 1
 
@@ -117,7 +125,7 @@ inoremap <expr><C-e> neocomplcache#cancel_popup()
 
 """ unite.vim
 " 入力モードで開始する
-" " let g:unite_enable_start_insert=1
+let g:unite_enable_start_insert=1
 " " バッファ一覧
 nnoremap <silent> ,ub :<C-u>Unite buffer<CR>
 " ファイル一覧
@@ -137,9 +145,31 @@ au FileType unite inoremap <silent> <buffer> <expr> <C-j> unite#do_action('split
 " ウィンドウを縦に分割して開く
 au FileType unite nnoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
 au FileType unite inoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
-" ESCキーを2回押すと終了する
-au FileType unite nnoremap <silent> <buffer> <ESC><ESC> q
-au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>q
+
+" unite.vim上でのキーマッピング
+autocmd FileType unite call s:unite_my_settings()
+function! s:unite_my_settings()
+  " 単語単位からパス単位で削除するように変更
+  imap <buffer> <C-w> <Plug>(unite_delete_backward_path)
+  " ESCキーを2回押すと終了する
+  nmap <silent><buffer> <ESC><ESC> q
+  imap <silent><buffer> <ESC><ESC> <ESC>q
+endfunction
+" grep検索
+nnoremap <silent> ,g  :<C-u>Unite grep:. -buffer-name=search-buffer<CR>
+" ディレクトリを指定してgrep検索
+nnoremap <silent> ,dg  :<C-u>Unite grep -buffer-name=search-buffer<CR>
+" カーソル位置の単語をgrep検索
+nnoremap <silent> ,cg :<C-u>Unite grep:. -buffer-name=search-buffer<CR><C-R><C-W><CR>
+" grep検索結果の再呼出
+nnoremap <silent> ,r  :<C-u>UniteResume search-buffer<CR>
+" unite grep に ag(The Silver Searcher) を使う
+if executable('ag')
+  let g:unite_source_grep_command = 'ag'
+  let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
+  let g:unite_source_grep_recursive_opt = ''
+endif
+
 
 set laststatus=2 " 常にステータスラインを表示
 set statusline=%f%m%=%l,%c\ %{'['.(&fenc!=''?&fenc:&enc).']\ ['.&fileformat.']'}%{fugitive#statusline()}
@@ -157,9 +187,16 @@ omap <silent> <C-e>      :NERDTreeToggle<CR>
 imap <silent> <C-e> <Esc>:NERDTreeToggle<CR>
 cmap <silent> <C-e> <C-u>:NERDTreeToggle<CR>
 
+
 if has('vim_starting')
     set runtimepath+=~/.vim/bundle/neobundle.vim
     call neobundle#begin(expand('~/.vim/bundle'))
+
+" DJANGO_SETTINGS_MODULE を自動設定
+	" NeoBundleLazy "lambdalisue/vim-django-support", {
+    "   \ "autoload": {
+    "   \   "filetypes": ["python", "python3", "djangohtml"]
+    "   \ }}
     NeoBundle 'Shougo/neobundle.vim'
     NeoBundle 'Shougo/vimproc'
     NeoBundle 'Shougo/unite.vim'
@@ -193,13 +230,16 @@ if has('vim_starting')
     NeoBundle 'thinca/vim-scouter'
     NeoBundle 'Align'
     NeoBundle 'Simple-Javascript-Indenter'
-    NeoBundle 'syntastic'
+    " NeoBundle 'syntastic'
+    NeoBundle 'scrooloose/syntastic'
     NeoBundle 'vim-coffee-script'
     NeoBundle 'taglist.vim'
     NeoBundle 'csv.vim'
     NeoBundle 'fatih/vim-go'
-    NeoBundle 'git://github.com/kmnk/vim-unite-giti.git'
+    " NeoBundle 'kmnk/vim-unite-giti'
+    " NeoBundle 'git://github.com/kmnk/vim-unite-giti.git'
     NeoBundle 'ekalinin/Dockerfile.vim'
+    NeoBundle 'davidhalter/jedi-vim'
 
     " カラースキーム
     NeoBundle 'altercation/vim-colors-solarized'
@@ -214,6 +254,12 @@ if has('vim_starting')
     NeoBundle 'therubymug/vim-pyte'
     NeoBundle 'tomasr/molokai'
     NeoBundle 'ujihisa/unite-colorscheme'
+
+	NeoBundleLazy "lambdalisue/vim-pyenv", {
+      \ "depends": ['davidhalter/jedi-vim'],
+      \ "autoload": {
+      \   "filetypes": ["python", "python3", "djangohtml"]
+      \ }}
 
     call neobundle#end()
 endif
@@ -378,3 +424,21 @@ NeoBundleLazy 'fatih/vim-go', {
             \ }
 
 let g:go_fmt_command = "goimports"
+
+"python syntax check
+let g:syntastic_python_checkers = ['pyflakes', 'pep8']
+
+"------------------------------------------------------------
+" jedi-vim Setting
+
+autocmd FileType python setlocal completeopt-=preview
+autocmd FileType python setlocal omnifunc=jedi#completions
+let g:jedi#completions_enabled = 0
+let g:jedi#auto_vim_configuration = 0
+if !exists('g:neocomplete#force_omni_input_patterns')
+    let g:neocomplete#force_omni_input_patterns = {}
+endif
+
+let g:neocomplete#force_omni_input_patterns.python = '\h\w*\|[^. \t]\.\w*'
+
+"------------------------------------------------------------
