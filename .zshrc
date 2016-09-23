@@ -28,6 +28,7 @@ setopt rm_star_silent
 setopt sh_word_split
 setopt sun_keyboard_hack
 setopt noclobber
+setopt nonomatch
 # watch=(all)
 
 # correct prompt
@@ -121,3 +122,36 @@ alias gp='ghq list -p | p cd'
 
 export PATH=$PATH:/usr/local/src/spark/bin
 export PATH=$PATH:/Users/suzukishota/bin
+
+export PYENV_ROOT=$HOME/.pyenv
+export PATH=$PYENV_ROOT/bin:$PATH
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+
+# aws cli local mode
+alias laws='aws --endpoint-url http://localhost:8080'
+
+# git
+alias g='git'
+alias -g B='`git branch -a | peco --prompt "GIT BRANCH>" | head -n 1 | sed -e "s/^\*\s*//g"`'
+alias -g R='`git remote | peco --prompt "GIT REMOTE>" | head -n 1`'
+# alias -g LR='`git branch -a | peco --query "remotes/ " --prompt "GIT REMOTE BRANCH>" | head -n 1 | sed "s/^\*\s*//" | sed "s/remotes\/[^\/]*\/\(\S*\)/\1 \0/"`'
+alias -g LR='`git branch -a | peco --query "remotes/ " --prompt "GIT REMOTE BRANCH>" | head -n 1 | sed "s/^\*\s*//" | sed "s/remotes\/[^\/]*\/\(\S*\)/\1 /"`'
+
+# rbenv
+eval "$(rbenv init -)"
+
+bindkey "^@" kill-line
+
+# docker
+alias docker='docker --tlsverify=false'
+
+alias dps='docker ps --format "{{.ID}}\t{{.Image}}\t{{.Status}}\t{{.Command}}\t{{.RunningFor}}"'
+alias dpsa='docker ps -a --format "{{.ID}}\t{{.Image}}\t{{.Status}}\t{{.Command}}\t{{.RunningFor}}"'
+alias dexec='docker exec -it `dps| peco | cut -f 1` /bin/bash'
+alias dkill='docker kill `dps| peco | cut -f 1`'
+alias drm='docker rm `dpsa| peco | cut -f 1`'
+
+# ctags
+alias ctags="`brew --prefix`/bin/ctags"
+

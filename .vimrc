@@ -254,6 +254,7 @@ if has('vim_starting')
     NeoBundle 'therubymug/vim-pyte'
     NeoBundle 'tomasr/molokai'
     NeoBundle 'ujihisa/unite-colorscheme'
+    NeoBundle 'derekwyatt/vim-scala'
 
 	NeoBundleLazy "lambdalisue/vim-pyenv", {
       \ "depends": ['davidhalter/jedi-vim'],
