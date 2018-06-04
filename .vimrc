@@ -1,3 +1,52 @@
+"dein Scripts-----------------------------
+if &compatible
+  set nocompatible               " Be iMproved
+endif
+
+" Required:
+set runtimepath+=/Users/shota.b.suzuki/.cache/dein/repos/github.com/Shougo/dein.vim
+
+" Required:
+if dein#load_state('/Users/shota.b.suzuki/.cache/dein')
+  call dein#begin('/Users/shota.b.suzuki/.cache/dein')
+
+  " Let dein manage dein
+  " Required:
+  call dein#add('/Users/shota.b.suzuki/.cache/dein/repos/github.com/Shougo/dein.vim')
+
+  " Add or remove your plugins here:
+  call dein#add('Shougo/neosnippet.vim')
+  call dein#add('Shougo/neosnippet-snippets')
+
+  " dein.toml, dein_layz.tomlファイルのディレクトリをセット
+  let s:toml_dir = expand('~/.dein')
+
+  " 起動時に読み込むプラグイン群
+  call dein#load_toml(s:toml_dir . '/dein.toml', {'lazy': 0})
+
+  " 遅延読み込みしたいプラグイン群
+  call dein#load_toml(s:toml_dir . '/dein_lazy.toml', {'lazy': 1})
+
+  " You can specify revision/branch/tag.
+  call dein#add('Shougo/deol.nvim', { 'rev': 'a1b5108fd' })
+
+  " Required:
+  call dein#end()
+  call dein#save_state()
+endif
+
+" Required:
+filetype plugin indent on
+syntax enable
+
+" If you want to install not installed plugins on startup.
+if dein#check_install()
+  call dein#install()
+endif
+
+"End dein Scripts-------------------------
+
+
 " ファイル形式の検出を無効にする
 filetype off
 " エンコード指定
@@ -188,83 +237,83 @@ imap <silent> <C-e> <Esc>:NERDTreeToggle<CR>
 cmap <silent> <C-e> <C-u>:NERDTreeToggle<CR>
 
 
-if has('vim_starting')
-    set runtimepath+=~/.vim/bundle/neobundle.vim
-    call neobundle#begin(expand('~/.vim/bundle'))
-
-" DJANGO_SETTINGS_MODULE を自動設定
-	" NeoBundleLazy "lambdalisue/vim-django-support", {
-    "   \ "autoload": {
-    "   \   "filetypes": ["python", "python3", "djangohtml"]
-    "   \ }}
-    NeoBundle 'Shougo/neobundle.vim'
-    NeoBundle 'Shougo/vimproc'
-    NeoBundle 'Shougo/unite.vim'
-    NeoBundle 'Shougo/neocomplcache'
-    " NeoBundle 'Shougo/neosnippet'
-    " NeoBundle 'mattn/zencoding-vim'
-    NeoBundle 'Shougo/neomru.vim'
-    NeoBundle 'teramako/jscomplete-vim'
-    NeoBundle 'tpope/vim-fugitive'
-    NeoBundle 'int3/vim-extradite'
-    NeoBundle 'thinca/vim-quickrun'
-    NeoBundle 'Shougo/vimfiler'
-    NeoBundle 'tpope/vim-rails'
-    NeoBundle 'hotchpotch/perldoc-vim'
-    NeoBundle 'vim-scripts/SingleCompile'
-    NeoBundle 'scrooloose/nerdtree'
-    NeoBundle 'tomtom/tcomment_vim'
-    NeoBundle 'tpope/vim-surround'
-    NeoBundle 'Lokaltog/vim-easymotion'
-    NeoBundle 'fuenor/vim-statusline'
-    NeoBundle 'y-uuki/unite-perl-module.vim'
-    NeoBundle 'y-uuki/perl-local-lib-path.vim'
-    NeoBundle 'mattn/excitetranslate-vim'
-    NeoBundle 'kana/vim-smartchr'
-    NeoBundle 'qtmplsel.vim'
-    NeoBundle 'tpope/vim-abolish'
-    NeoBundle 'YankRing.vim'
-    NeoBundle 'ctags.vim'
-    NeoBundle 'wesleyche/SrcExpl'
-    NeoBundle 'ack.vim'
-    NeoBundle 'thinca/vim-scouter'
-    NeoBundle 'Align'
-    NeoBundle 'Simple-Javascript-Indenter'
-    " NeoBundle 'syntastic'
-    NeoBundle 'scrooloose/syntastic'
-    NeoBundle 'vim-coffee-script'
-    NeoBundle 'taglist.vim'
-    NeoBundle 'csv.vim'
-    NeoBundle 'fatih/vim-go'
-    " NeoBundle 'kmnk/vim-unite-giti'
-    " NeoBundle 'git://github.com/kmnk/vim-unite-giti.git'
-    NeoBundle 'ekalinin/Dockerfile.vim'
-    NeoBundle 'davidhalter/jedi-vim'
-
-    " カラースキーム
-    NeoBundle 'altercation/vim-colors-solarized'
-    NeoBundle 'croaker/mustang-vim'
-    NeoBundle 'jeffreyiacono/vim-colors-wombat'
-    NeoBundle 'nanotech/jellybeans.vim'
-    NeoBundle 'altercation/vim-colors-solarized'
-    NeoBundle 'vim-scripts/Lucius'
-    NeoBundle 'vim-scripts/Zenburn'
-    NeoBundle 'mrkn/mrkn256.vim'
-    NeoBundle 'jpo/vim-railscasts-theme'
-    NeoBundle 'therubymug/vim-pyte'
-    NeoBundle 'tomasr/molokai'
-    NeoBundle 'ujihisa/unite-colorscheme'
-    NeoBundle 'derekwyatt/vim-scala'
-
-	NeoBundleLazy "lambdalisue/vim-pyenv", {
-      \ "depends": ['davidhalter/jedi-vim'],
-      \ "autoload": {
-      \   "filetypes": ["python", "python3", "djangohtml"]
-      \ }}
-
-    call neobundle#end()
-endif
-" originalrepos on github
+"if has('vim_starting')
+"    set runtimepath+=~/.vim/bundle/neobundle.vim
+"    call neobundle#begin(expand('~/.vim/bundle'))
+"
+"" DJANGO_SETTINGS_MODULE を自動設定
+"	" NeoBundleLazy "lambdalisue/vim-django-support", {
+"    "   \ "autoload": {
+"    "   \   "filetypes": ["python", "python3", "djangohtml"]
+"    "   \ }}
+"    NeoBundle 'Shougo/neobundle.vim'
+"    NeoBundle 'Shougo/vimproc'
+"    NeoBundle 'Shougo/unite.vim'
+"    NeoBundle 'Shougo/neocomplcache'
+"    " NeoBundle 'Shougo/neosnippet'
+"    " NeoBundle 'mattn/zencoding-vim'
+"    NeoBundle 'Shougo/neomru.vim'
+"    NeoBundle 'teramako/jscomplete-vim'
+"    NeoBundle 'tpope/vim-fugitive'
+"    NeoBundle 'int3/vim-extradite'
+"    NeoBundle 'thinca/vim-quickrun'
+"    NeoBundle 'Shougo/vimfiler'
+"    NeoBundle 'tpope/vim-rails'
+"    NeoBundle 'hotchpotch/perldoc-vim'
+"    NeoBundle 'vim-scripts/SingleCompile'
+"    NeoBundle 'scrooloose/nerdtree'
+"    NeoBundle 'tomtom/tcomment_vim'
+"    NeoBundle 'tpope/vim-surround'
+"    NeoBundle 'Lokaltog/vim-easymotion'
+"    NeoBundle 'fuenor/vim-statusline'
+"    NeoBundle 'y-uuki/unite-perl-module.vim'
+"    NeoBundle 'y-uuki/perl-local-lib-path.vim'
+"    NeoBundle 'mattn/excitetranslate-vim'
+"    NeoBundle 'kana/vim-smartchr'
+"    NeoBundle 'qtmplsel.vim'
+"    NeoBundle 'tpope/vim-abolish'
+"    NeoBundle 'YankRing.vim'
+"    NeoBundle 'ctags.vim'
+"    NeoBundle 'wesleyche/SrcExpl'
+"    NeoBundle 'ack.vim'
+"    NeoBundle 'thinca/vim-scouter'
+"    NeoBundle 'Align'
+"    NeoBundle 'Simple-Javascript-Indenter'
+"    " NeoBundle 'syntastic'
+"    NeoBundle 'scrooloose/syntastic'
+"    NeoBundle 'vim-coffee-script'
+"    NeoBundle 'taglist.vim'
+"    NeoBundle 'csv.vim'
+"    NeoBundle 'fatih/vim-go'
+"    " NeoBundle 'kmnk/vim-unite-giti'
+"    " NeoBundle 'git://github.com/kmnk/vim-unite-giti.git'
+"    NeoBundle 'ekalinin/Dockerfile.vim'
+"    NeoBundle 'davidhalter/jedi-vim'
+"
+"    " カラースキーム
+"    NeoBundle 'altercation/vim-colors-solarized'
+"    NeoBundle 'croaker/mustang-vim'
+"    NeoBundle 'jeffreyiacono/vim-colors-wombat'
+"    NeoBundle 'nanotech/jellybeans.vim'
+"    NeoBundle 'altercation/vim-colors-solarized'
+"    NeoBundle 'vim-scripts/Lucius'
+"    NeoBundle 'vim-scripts/Zenburn'
+"    NeoBundle 'mrkn/mrkn256.vim'
+"    NeoBundle 'jpo/vim-railscasts-theme'
+"    NeoBundle 'therubymug/vim-pyte'
+"    NeoBundle 'tomasr/molokai'
+"    NeoBundle 'ujihisa/unite-colorscheme'
+"    NeoBundle 'derekwyatt/vim-scala'
+"
+"	NeoBundleLazy "lambdalisue/vim-pyenv", {
+"      \ "depends": ['davidhalter/jedi-vim'],
+"      \ "autoload": {
+"      \   "filetypes": ["python", "python3", "djangohtml"]
+"      \ }}
+"
+"    call neobundle#end()
+"endif
+"" originalrepos on github
 
 filetype plugin indent on
 filetype indent on
@@ -327,13 +376,13 @@ nmap gW <Plug>(openbrowser - open)
 nmap ,y :YRShow<CR>
 
 "他のアプリでコピーした文字をVimで貼付けたい。またはその逆も
-set clipboard=unnamed,autoselect
+" set clipboard=unnamed,autoselect
 set clipboard+=unnamedplus,unnamed
 
 "smartchr
-inoremap <expr> = smartchr#loop('=', ' = ', ' == ')
-inoremap <expr> , smartchr#loop(',', ', ', ' => ')
-inoremap <buffer> <expr> <S-=> smartchr#loop(' + ', '+')
+"inoremap <expr> = smartchr#loop('=', ' = ', ' == ')
+"inoremap <expr> , smartchr#loop(',', ', ', ' => ')
+"inoremap <buffer> <expr> <S-=> smartchr#loop(' + ', '+')
 
 "作業履歴の保存
 if has('persistent_undo')
@@ -420,9 +469,9 @@ set background=dark
 colorscheme solarized
 
 
-NeoBundleLazy 'fatih/vim-go', {
-            \ 'autoload' : { 'filetypes' : 'go'  }
-            \ }
+"NeoBundleLazy 'fatih/vim-go', {
+"            \ 'autoload' : { 'filetypes' : 'go'  }
+"            \ }
 
 let g:go_fmt_command = "goimports"
 
