@@ -73,7 +73,8 @@ export WORDCHARS='*?_.[];!#$%^{}<>'
 
 # PROMPT
 PROMPT='%U%B`whoami`%b%{[31m%}@%{[m%}%B%m%b%u${WINDOW:+"%{^[[32m%}[$WINDOW]%{^[[m%}"} '
-RPROMPT='%{[33m%}[%~]%{[m%}'
+#RPROMPT='%{[33m%}[%~]%{[m%}'
+RPROMPT="%(?..%F{red}-%?-)%F{green}[%1(v|%F{yellow}%1v%F{green} |):%~]%f"
 
 # PROMPT
 export CC=gcc
@@ -139,12 +140,12 @@ alias -g R='`git remote | peco --prompt "GIT REMOTE>" | head -n 1`'
 alias -g LR='`git branch -a | peco --query "remotes/ " --prompt "GIT REMOTE BRANCH>" | head -n 1 | sed "s/^\*\s*//" | sed "s/remotes\/[^\/]*\/\(\S*\)/\1 /"`'
 
 # rbenv
-eval "$(rbenv init -)"
+# eval "$(rbenv init -)"
 
 bindkey "^@" kill-line
 
 # docker
-alias docker='docker --tlsverify=false'
+#alias docker='docker --tlsverify=false'
 
 alias dps='docker ps --format "{{.ID}}\t{{.Image}}\t{{.Status}}\t{{.Command}}\t{{.RunningFor}}"'
 alias dpsa='docker ps -a --format "{{.ID}}\t{{.Image}}\t{{.Status}}\t{{.Command}}\t{{.RunningFor}}"'
@@ -155,3 +156,43 @@ alias drm='docker rm `dpsa| peco | cut -f 1`'
 # ctags
 alias ctags="`brew --prefix`/bin/ctags"
 
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+
+alias vim='nvim'
+
+ssh-add -A 2> /dev/null
+
+alias git="nocorrect git"
+
+#git¥Ö¥é¥ó¥ÁÌ¾É½¼¨
+autoload -Uz vcs_info
+zstyle ':vcs_info:*' enable git
+zstyle ':vcs_info:git:*' formats '%c%u%b'
+zstyle ':vcs_info:git:*' actionformats '%c%u%b|%a'
+
+#¥«¥ì¥ó¥È¥Ç¥£¥ì¥¯¥È¥ê/¥³¥Þ¥ó¥Éµ­Ï¿
+local _cmd=''
+local _lastdir=''
+preexec() {
+  _cmd="$1"
+  _lastdir="$PWD"
+}
+#git¾ðÊó¹¹¿·
+update_vcs_info() {
+  psvar=()
+  LANG=en_US.UTF-8 vcs_info
+  [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
+}
+#¥«¥ì¥ó¥È¥Ç¥£¥ì¥¯¥È¥êÊÑ¹¹»þ/git´ØÏ¢¥³¥Þ¥ó¥É¼Â¹Ô»þ¤Ë¾ðÊó¹¹¿·
+precmd() {
+  _r=$?
+  case "${_cmd}" in
+    git*|stg*) update_vcs_info ;;
+    *) [ "${_lastdir}" != "$PWD" ] && update_vcs_info ;;
+  esac
+  return $_r
+}
+
+eval "$(pyenv virtualenv-init -)"
